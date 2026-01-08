@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.10, 3.11]
+        node-version: [18, 20]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ——————————————
+      # Install Python dependencies
+      # ——————————————
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python dependencies
+        working-directory: .
+        run: |
+          python -m venv venv
+          . venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: (Optional) Run Python lint / tests
+        run: |
+          . venv/bin/activate
+          # pip install flake8 pytest   # 如果你有
+          # flake8 .
+          # pytest -q
+
+      # ——————————————
+      # Install Frontend dependencies
+      # ——————————————
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install UI dependencies
+        working-directory: ./bin/UI
+        run: npm ci
+
+      - name: Build UI
+        working-directory: ./bin/UI
+        run: npm run build
+
+      # ——————————————
+      # (Optional) Upload build artifacts
+      # ——————————————
+
+      - name: Upload frontend build artifact
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ui-build
+          path: bin/UI/dist
