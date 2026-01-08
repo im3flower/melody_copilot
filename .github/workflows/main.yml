@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      matrix:
+      matrix:v3
         python-version: [3.10, 3.11]
         node-version: [18, 20]
 
@@ -66,7 +66,7 @@ jobs:
 
       - name: Upload frontend build artifact
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ui-build
           path: bin/UI/dist
