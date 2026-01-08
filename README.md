@@ -41,7 +41,7 @@ Core env keys (root `.env`):
 - Frontend: `cd bin/UI && npm run dev`
 
 ## Ableton Live / Max for Live
-- Load the device in `bin/max_for_live` (e.g., `max_signal_proc.amxd`) or open `get_midi.maxpat` in a Max MIDI Effect.
+- Load `bin/max_for_live/max_signal_proc.amxd` in a Max MIDI Effect (directly drag it into the start of a midi track).
 - Sending notes: `[live.object] → [js notesender.js] → [udpsend 127.0.0.1 7400]`
 - Receiving generated notes: `[udpreceive 7401] → [dict.deserialize] → [dict.unpack added_notes:] → MIDI out`
 
@@ -88,4 +88,5 @@ Full guides live in `bin/docs/`:
 - `LIVE_INTEGRATION.md` – endpoints & flow
 - `IMPLEMENTATION_COMPLETE.md` – technical deep-dive
 - `DOCUMENTATION_INDEX.md` – master index
+
 
